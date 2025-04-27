@@ -1,0 +1,112 @@
+package com.example.wellnesstracker.service;
+
+import com.example.wellnesstracker.common.Category;
+import com.example.wellnesstracker.dto.SupplementDto;
+import com.example.wellnesstracker.model.Supplement;
+import com.example.wellnesstracker.repository.SupplementRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class SupplementService {
+
+    private final SupplementRepository supplementRepository;
+
+    @Autowired
+    public SupplementService(SupplementRepository supplementRepository) {
+        this.supplementRepository = supplementRepository;
+    }
+
+    public SupplementDto createSupplement(SupplementDto supplementDto) {
+       validateSupplementDto(supplementDto);
+
+       //Dto to entity
+       Supplement supplement = convertToEntity(supplementDto);
+
+       // Save entity
+        Supplement saveSupplement = supplementRepository.save(supplement);
+
+        return convertToDto(saveSupplement);
+    }
+
+    public SupplementDto getSupplementById(long id) {
+        Supplement supplement = supplementRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Supplement not found with id: " + id));
+
+        return convertToDto(supplement);
+    }
+
+    public List<SupplementDto> getAllSupplements() {
+        return supplementRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SupplementDto> getSupplementsByCategory(Category category) {
+        return supplementRepository.findByCategory(category).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    // Update - take DTO, return DTO
+    public SupplementDto updateSupplement(long id, SupplementDto supplementDto) {
+        Supplement existingSupplement = supplementRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Supplement not found with id: " + id));
+
+        // Update fields
+        existingSupplement.setName(supplementDto.getName());
+        existingSupplement.setCategory(supplementDto.getCategory());
+        existingSupplement.setManufacturer(supplementDto.getManufacturer());
+        existingSupplement.setBenefits(supplementDto.getBenefits());
+        existingSupplement.setDosageAmount(supplementDto.getDosageAmount());
+        existingSupplement.setDosageUnit(supplementDto.getDosageUnit());
+        existingSupplement.setPrice(supplementDto.getPrice());
+
+        // Save updated entity
+        Supplement updatedSupplement = supplementRepository.save(existingSupplement);
+
+        // Return as DTO
+        return convertToDto(updatedSupplement);
+    }
+
+    public List<SupplementDto> searchSupplementsByName(String name) {
+        return supplementRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public SupplementDto convertToDto(Supplement supplement) {
+        SupplementDto dto = new SupplementDto();
+        dto.setId(supplement.getId());
+        dto.setName(supplement.getName());
+        dto.setCategory(supplement.getCategory());
+        dto.setManufacturer(supplement.getManufacturer());
+        dto.setBenefits(supplement.getBenefits());
+        dto.setDosageAmount(supplement.getDosageAmount());
+        dto.setDosageUnit(supplement.getDosageUnit());
+        return dto;
+    }
+
+        public Supplement convertToEntity(SupplementDto dto) {
+            Supplement supplement = new Supplement();
+            supplement.setId(dto.getId());
+            supplement.setName(dto.getName());
+            supplement.setCategory(dto.getCategory());
+            supplement.setManufacturer(dto.getManufacturer());
+            supplement.setBenefits(dto.getBenefits());
+            supplement.setDosageAmount(dto.getDosageAmount());
+            supplement.setDosageUnit(dto.getDosageUnit());
+            return supplement;
+    }
+
+    private void validateSupplementDto(SupplementDto supplementDto) {
+        if (supplementDto.getName() == null || supplementDto.getName().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+    }
+}
