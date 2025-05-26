@@ -1,9 +1,13 @@
 package com.example.wellnesstracker.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.util.List;
 
-
+@Setter
+@Getter
 public class WellnessRecordDto {
     private Long id;
     private String userId;
@@ -34,83 +38,4 @@ public class WellnessRecordDto {
         this.notes = notes;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public LocalDate getRecordDate() {
-        return recordDate;
-    }
-
-    public void setRecordDate(LocalDate recordDate) {
-        this.recordDate = recordDate;
-    }
-
-    public List<Long> getSupplementIds() {
-        return supplementIds;
-    }
-
-    public void setSupplementIds(List<Long> supplementIds) {
-        this.supplementIds = supplementIds;
-    }
-
-    public List<String> getDailySymptoms() {
-        return dailySymptoms;
-    }
-
-    public void setDailySymptoms(List<String> dailySymptoms) {
-        this.dailySymptoms = dailySymptoms;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public int getSleepHours() {
-        return sleepHours;
-    }
-
-    public void setSleepHours(int sleepHours) {
-        this.sleepHours = sleepHours;
-    }
-
-    public int getStressLevel() {
-        return stressLevel;
-    }
-
-    public void setStressLevel(int stressLevel) {
-        this.stressLevel = stressLevel;
-    }
-
-    public int getEnergyLevel() {
-        return energyLevel;
-    }
-
-    public void setEnergyLevel(int energyLevel) {
-        this.energyLevel = energyLevel;
-    }
-
-    public List<String> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(List<String> notes) {
-        this.notes = notes;
-    }
 }

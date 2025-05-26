@@ -2,7 +2,6 @@ package com.example.wellnesstracker.controller;
 
 import com.example.wellnesstracker.common.Category;
 import com.example.wellnesstracker.dto.SupplementDto;
-import com.example.wellnesstracker.model.Supplement;
 import com.example.wellnesstracker.service.SupplementService;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
@@ -36,13 +35,6 @@ public class SupplementController {
         return ResponseEntity.ok(supplement);
     }
 
-    @PostMapping
-    public ResponseEntity<SupplementDto> createSupplement(@RequestBody SupplementDto supplementDto) {
-        Supplement supplement = supplementService.convertToEntity(supplementDto);
-        SupplementDto savedDto = supplementService.convertToDto(supplement);
-        return ResponseEntity.ok(savedDto);
-    }
-
     @GetMapping
     public ResponseEntity<List<SupplementDto>> getAllSupplements() {
         List<SupplementDto> supplements = supplementService.getAllSupplements();
@@ -67,7 +59,7 @@ public class SupplementController {
         return ResponseEntity.ok(supplements);
     }
 
-    // Exception handler for validation errors
+    //Exception handler for validation errors
 //    @ExceptionHandler(ValidationException.class)
 //    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex) {
 //        ErrorResponse error = new ErrorResponse("BAD_REQUEST", ex.getMessage());

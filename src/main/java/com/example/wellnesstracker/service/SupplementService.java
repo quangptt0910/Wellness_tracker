@@ -6,6 +6,7 @@ import com.example.wellnesstracker.model.Supplement;
 import com.example.wellnesstracker.repository.SupplementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +55,7 @@ public class SupplementService {
 
 
     // Update - take DTO, return DTO
+    @Transactional
     public SupplementDto updateSupplement(long id, SupplementDto supplementDto) {
         Supplement existingSupplement = supplementRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Supplement not found with id: " + id));
@@ -89,18 +91,23 @@ public class SupplementService {
         dto.setBenefits(supplement.getBenefits());
         dto.setDosageAmount(supplement.getDosageAmount());
         dto.setDosageUnit(supplement.getDosageUnit());
+        dto.setPrice(supplement.getPrice());
         return dto;
     }
 
         public Supplement convertToEntity(SupplementDto dto) {
             Supplement supplement = new Supplement();
-            supplement.setId(dto.getId());
+            // Only set the ID if it's not null (for updates)
+            if (dto.getId() != null) {
+                supplement.setId(dto.getId());
+            }
             supplement.setName(dto.getName());
             supplement.setCategory(dto.getCategory());
             supplement.setManufacturer(dto.getManufacturer());
             supplement.setBenefits(dto.getBenefits());
             supplement.setDosageAmount(dto.getDosageAmount());
             supplement.setDosageUnit(dto.getDosageUnit());
+            supplement.setPrice(dto.getPrice());
             return supplement;
     }
 
