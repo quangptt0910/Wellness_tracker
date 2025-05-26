@@ -5,5 +5,8 @@ public enum DosageUnit {
     ML,
     CAPSULES,
     TABLETS,
-    GRAMS
+    GRAMS,
+    MCG,
+    BILLION_CFU,
+    IU
 }

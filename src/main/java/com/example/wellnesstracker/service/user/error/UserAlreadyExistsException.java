@@ -1,4 +1,4 @@
-package com.example.wellnesstracker.service.error;
+package com.example.wellnesstracker.service.user.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

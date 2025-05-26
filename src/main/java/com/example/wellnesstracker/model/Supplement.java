@@ -3,60 +3,42 @@ package com.example.wellnesstracker.model;
 
 import com.example.wellnesstracker.common.Category;
 import com.example.wellnesstracker.common.DosageUnit;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Getter
-@Entity
 @AllArgsConstructor
-@Table(name = "supplements", schema = "pharmacy")
+@NoArgsConstructor
+@Document(collection = "supplement")
 public class Supplement {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
-    private long id;
+    private String id;
 
-    @Column(name = "name")
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "category")
-    private Category category;
+    private String category;
 
-    @Column(name = "manufacturer")
     private String manufacturer;
 
-    @ElementCollection
-    @Column(name = "benefits")
     private List<String> benefits = new ArrayList<>();
 
-    @Column(name = "dosageAmount")
     private Integer dosageAmount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "dosageUnit")
     private DosageUnit dosageUnit;
 
-    @Column(name = "price")
     private Double price;
 
-    // Constructors
-    public Supplement() {}
 
-    public Supplement(String name, Category category, String manufacturer) {
-        this.name = name;
-        this.category = category;
-        this.manufacturer = manufacturer;
-    }
-
-    // Methods to add benefits and ingredients
+    // Methods to add benefits
     public void addBenefit(String benefit) {
         if (!benefits.contains(benefit)) {
             benefits.add(benefit);

@@ -1,15 +1,15 @@
 package com.example.wellnesstracker.service;
 
 
-import com.example.wellnesstracker.dto.LoginDto;
-import com.example.wellnesstracker.dto.LoginResponseDto;
-import com.example.wellnesstracker.dto.RegisterDto;
-import com.example.wellnesstracker.dto.RegisterResponseDto;
+import com.example.wellnesstracker.dto.auth.LoginDto;
+import com.example.wellnesstracker.dto.auth.LoginResponseDto;
+import com.example.wellnesstracker.dto.auth.RegisterDto;
+import com.example.wellnesstracker.dto.auth.RegisterResponseDto;
 import com.example.wellnesstracker.model.Auth;
 import com.example.wellnesstracker.model.User;
 import com.example.wellnesstracker.repository.AuthRepository;
 import com.example.wellnesstracker.repository.UserRepository;
-import com.example.wellnesstracker.service.error.UserAlreadyExistsException;
+import com.example.wellnesstracker.service.user.error.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,7 +52,7 @@ public class AuthService {
         auth.setPassword(passwordEncoder.encode(dto.getPassword()));
         auth.setUsername(dto.getUsername());
         auth.setRole(dto.getRole());
-        auth.setUser(createdUser);
+        auth.setUserId(createdUser.getId());
 
         Auth createdAuth = authRepository.save(auth);
 

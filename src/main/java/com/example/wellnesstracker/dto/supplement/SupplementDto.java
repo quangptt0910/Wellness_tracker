@@ -1,4 +1,4 @@
-package com.example.wellnesstracker.dto;
+package com.example.wellnesstracker.dto.supplement;
 
 import com.example.wellnesstracker.common.Category;
 import com.example.wellnesstracker.common.DosageUnit;
@@ -10,16 +10,15 @@ import java.util.List;
 
 @Getter
 @Setter
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SupplementDto {
 
-    private Long id;
+    private String id;
 
     @NotNull(message = "Name cannot be null")
     private String name;
-    private Category category;         // Represented as String for simplicity
+    private String category;
     private String manufacturer;
     private List<String> benefits;
     private Integer dosageAmount;

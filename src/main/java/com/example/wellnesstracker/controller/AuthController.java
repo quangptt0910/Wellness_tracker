@@ -1,23 +1,19 @@
 package com.example.wellnesstracker.controller;
 
 
-import com.example.wellnesstracker.dto.LoginDto;
-import com.example.wellnesstracker.dto.LoginResponseDto;
-import com.example.wellnesstracker.dto.RegisterDto;
-import com.example.wellnesstracker.dto.RegisterResponseDto;
+import com.example.wellnesstracker.dto.auth.LoginDto;
+import com.example.wellnesstracker.dto.auth.LoginResponseDto;
+import com.example.wellnesstracker.dto.auth.RegisterDto;
+import com.example.wellnesstracker.dto.auth.RegisterResponseDto;
 import com.example.wellnesstracker.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@PreAuthorize("hasRole('ADMIN')")
 public class AuthController {
     private final AuthService authService;
 
@@ -33,10 +29,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginDto requestBody){
         LoginResponseDto dto = authService.login(requestBody);
-        return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 
+    @GetMapping("/admin/users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllUsers(){
+        // This endpoint requires ADMIN role
+        return ResponseEntity.ok("Admin only endpoint");
     }
 }

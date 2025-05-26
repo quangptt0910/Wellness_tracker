@@ -1,19 +1,18 @@
 package com.example.wellnesstracker.controller;
 
 import com.example.wellnesstracker.common.Category;
-import com.example.wellnesstracker.dto.SupplementDto;
+import com.example.wellnesstracker.dto.supplement.CreateSupplementDto;
+import com.example.wellnesstracker.dto.supplement.SupplementDto;
 import com.example.wellnesstracker.service.SupplementService;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/supplements")
+@RequestMapping("/api/supplement")
 public class SupplementController {
 
     private final SupplementService supplementService;
@@ -24,13 +23,13 @@ public class SupplementController {
     }
 
     @PostMapping
-    public ResponseEntity<SupplementDto> create(@RequestBody SupplementDto supplementDto) {
-        SupplementDto createdSupplement = supplementService.createSupplement(supplementDto);
+    public ResponseEntity<SupplementDto> create(@Valid @RequestBody CreateSupplementDto createSupplementDto) {
+        SupplementDto createdSupplement = supplementService.createSupplement(createSupplementDto);
         return new ResponseEntity<>(createdSupplement, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SupplementDto> getSupplementById(@PathVariable long id) {
+    public ResponseEntity<SupplementDto> getSupplementById(@PathVariable String id) {
         SupplementDto supplement = supplementService.getSupplementById(id);
         return ResponseEntity.ok(supplement);
     }
@@ -48,7 +47,7 @@ public class SupplementController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SupplementDto> updateSupplement(@PathVariable long id, @Valid @RequestBody SupplementDto supplementDto) {
+    public ResponseEntity<SupplementDto> updateSupplement(@PathVariable String id, @Valid @RequestBody SupplementDto supplementDto) {
         SupplementDto updatedSupplement = supplementService.updateSupplement(id, supplementDto);
         return ResponseEntity.ok(updatedSupplement);
     }

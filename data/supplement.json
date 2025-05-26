@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Vitamin D",
+    "category": "VITAMIN",
+    "manufacturer": "NatureMade",
+    "benefits": ["Bone health", "Immune support", "Calcium absorption"],
+    "dosageAmount": 1000,
+    "dosageUnit": "MG",
+    "price": 12.99
+  },
+  {
+    "id": 2,
+    "name": "Omega-3",
+    "category": "OMEGA_FATTY_ACID",
+    "manufacturer": "Nordic Naturals",
+    "benefits": ["Heart health", "Brain function", "Anti-inflammatory"],
+    "dosageAmount": 1000,
+    "dosageUnit": "MG",
+    "price": 24.95
+  },
+  {
+    "id": 3,
+    "name": "Vitamin A",
+    "category": "VITAMIN",
+    "manufacturer": "NatureMade",
+    "benefits": ["Eye health", "Immune function", "Skin health"],
+    "dosageAmount": 1000,
+    "dosageUnit": "MG",
+    "price": 9.99
+  },
+  {
+    "id": 4,
+    "name": "Magnesium Glycinate",
+    "category": "MINERAL",
+    "manufacturer": "Thorne",
+    "benefits": ["Muscle relaxation", "Sleep quality", "Bone health"],
+    "dosageAmount": 400,
+    "dosageUnit": "MG",
+    "price": 18.50
+  },
+  {
+    "id": 5,
+    "name": "Vitamin B12",
+    "category": "VITAMIN",
+    "manufacturer": "Jarrow Formulas",
+    "benefits": ["Energy metabolism", "Nerve function", "Red blood cell formation"],
+    "dosageAmount": 2500,
+    "dosageUnit": "MCG",
+    "price": 15.75
+  },
+  {
+    "id": 6,
+    "name": "Probiotics Multi-Strain",
+    "category": "PROBIOTIC",
+    "manufacturer": "Garden of Life",
+    "benefits": ["Digestive health", "Immune support", "Gut microbiome balance"],
+    "dosageAmount": 50,
+    "dosageUnit": "BILLION_CFU",
+    "price": 32.99
+  },
+  {
+    "id": 7,
+    "name": "Zinc Picolinate",
+    "category": "MINERAL",
+    "manufacturer": "NOW Foods",
+    "benefits": ["Immune function", "Wound healing", "Protein synthesis"],
+    "dosageAmount": 30,
+    "dosageUnit": "MG",
+    "price": 11.25
+  },
+  {
+    "id": 8,
+    "name": "Turmeric Curcumin",
+    "category": "HERBAL",
+    "manufacturer": "Life Extension",
+    "benefits": ["Anti-inflammatory", "Joint health", "Antioxidant support"],
+    "dosageAmount": 500,
+    "dosageUnit": "MG",
+    "price": 21.00
+  },
+  {
+    "id": 9,
+    "name": "Iron Bisglycinate",
+    "category": "MINERAL",
+    "manufacturer": "Solgar",
+    "benefits": ["Oxygen transport", "Energy production", "Prevents iron deficiency"],
+    "dosageAmount": 28,
+    "dosageUnit": "MG",
+    "price": 16.40
+  },
+  {
+    "id": 10,
+    "name": "Ashwagandha Root Extract",
+    "category": "HERBAL",
+    "manufacturer": "KSM-66",
+    "benefits": ["Stress reduction", "Cortisol regulation", "Energy and vitality"],
+    "dosageAmount": 600,
+    "dosageUnit": "MG",
+    "price": 28.75
+  }
+]

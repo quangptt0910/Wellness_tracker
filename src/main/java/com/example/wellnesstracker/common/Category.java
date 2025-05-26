@@ -8,5 +8,5 @@ public enum Category {
     PROTEIN,
     OMEGA_FATTY_ACID,
     PROBIOTIC,
-    AMINO_ACID
+    AMINO_ACID,
 }

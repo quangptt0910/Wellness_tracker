@@ -1,15 +1,16 @@
 package com.example.wellnesstracker.service;
 
 import com.example.wellnesstracker.common.Category;
-import com.example.wellnesstracker.dto.SupplementDto;
+import com.example.wellnesstracker.dto.supplement.CreateSupplementDto;
+import com.example.wellnesstracker.dto.supplement.SupplementDto;
 import com.example.wellnesstracker.model.Supplement;
 import com.example.wellnesstracker.repository.SupplementRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +23,8 @@ public class SupplementService {
         this.supplementRepository = supplementRepository;
     }
 
-    public SupplementDto createSupplement(SupplementDto supplementDto) {
-       validateSupplementDto(supplementDto);
+    public SupplementDto createSupplement(@Valid CreateSupplementDto supplementDto) {
+       validateCreateSupplementDto(supplementDto);
 
        //Dto to entity
        Supplement supplement = convertToEntity(supplementDto);
@@ -34,7 +35,7 @@ public class SupplementService {
         return convertToDto(saveSupplement);
     }
 
-    public SupplementDto getSupplementById(long id) {
+    public SupplementDto getSupplementById(String id) {
         Supplement supplement = supplementRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Supplement not found with id: " + id));
 
@@ -56,7 +57,7 @@ public class SupplementService {
 
     // Update - take DTO, return DTO
     @Transactional
-    public SupplementDto updateSupplement(long id, SupplementDto supplementDto) {
+    public SupplementDto updateSupplement(String id, SupplementDto supplementDto) {
         Supplement existingSupplement = supplementRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Supplement not found with id: " + id));
 
@@ -95,25 +96,41 @@ public class SupplementService {
         return dto;
     }
 
-        public Supplement convertToEntity(SupplementDto dto) {
-            Supplement supplement = new Supplement();
-            // Only set the ID if it's not null (for updates)
-            if (dto.getId() != null) {
-                supplement.setId(dto.getId());
-            }
-            supplement.setName(dto.getName());
-            supplement.setCategory(dto.getCategory());
-            supplement.setManufacturer(dto.getManufacturer());
-            supplement.setBenefits(dto.getBenefits());
-            supplement.setDosageAmount(dto.getDosageAmount());
-            supplement.setDosageUnit(dto.getDosageUnit());
-            supplement.setPrice(dto.getPrice());
-            return supplement;
+    public Supplement convertToEntity(SupplementDto dto) {
+        Supplement supplement = new Supplement();
+        // Only set the ID if it's not null (for updates)
+        if (dto.getId() != null) {
+            supplement.setId(dto.getId());
+        }
+        supplement.setName(dto.getName());
+        supplement.setCategory(dto.getCategory());
+        supplement.setManufacturer(dto.getManufacturer());
+        supplement.setBenefits(dto.getBenefits());
+        supplement.setDosageAmount(dto.getDosageAmount());
+        supplement.setDosageUnit(dto.getDosageUnit());
+        supplement.setPrice(dto.getPrice());
+        return supplement;
     }
 
-    private void validateSupplementDto(SupplementDto supplementDto) {
-        if (supplementDto.getName() == null || supplementDto.getName().isEmpty()) {
+    public Supplement convertToEntity(CreateSupplementDto dto) {
+        Supplement supplement = new Supplement();
+        supplement.setName(dto.getName());
+        supplement.setCategory(dto.getCategory());
+        supplement.setManufacturer(dto.getManufacturer());
+        supplement.setBenefits(dto.getBenefits());
+        supplement.setDosageAmount(dto.getDosageAmount());
+        supplement.setDosageUnit(dto.getDosageUnit());
+        supplement.setPrice(dto.getPrice());
+        return supplement;
+    }
+
+    private void validateCreateSupplementDto(CreateSupplementDto createSupplementDto) {
+        if (createSupplementDto.getName() == null || createSupplementDto.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        if (createSupplementDto.getPrice() == null || createSupplementDto.getPrice() <= 0) {
+            throw new IllegalArgumentException("Price must greater than 0");
         }
     }
 }

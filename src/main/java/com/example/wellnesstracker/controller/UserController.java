@@ -1,8 +1,6 @@
 package com.example.wellnesstracker.controller;
 
-import com.example.wellnesstracker.dto.UserDto;
-import com.example.wellnesstracker.model.User;
-import com.example.wellnesstracker.repository.UserRepository;
+import com.example.wellnesstracker.dto.user.UserDto;
 import com.example.wellnesstracker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

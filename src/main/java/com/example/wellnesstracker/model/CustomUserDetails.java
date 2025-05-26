@@ -50,13 +50,10 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return auth.isEnabled();
     }
-
-    // Helpful method to get the associated user
-    public long getUserId() {
-        return auth.getUser().getId();
+    public String getUserId() {
+        return auth.getUserId();
     }
 
-    // Get the full user entity
     public Auth getAuth() {
         return auth;
     }
