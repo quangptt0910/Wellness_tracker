@@ -9,12 +9,21 @@ import com.example.wellnesstracker.common.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegisterDto {
+
+    @NotBlank
+    private String name;
+
+    private String surname;
 
     @NotBlank(message = "Username is required")
     private String username;
@@ -22,18 +31,10 @@ public class RegisterDto {
     @NotBlank(message = "Password is required")
     private String password;
 
-    @NotNull
     private UserRole role;
 
     @NotBlank(message = "Email is required")
     @Email
     private String email;
-
-    public RegisterDto(String password, String username, UserRole role, String email) {
-        this.password = password;
-        this.username = username;
-        this.role = role;
-        this.email = email;
-    }
 
 }

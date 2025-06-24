@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,7 +130,7 @@ public class SupplementService {
             throw new IllegalArgumentException("Name cannot be empty");
         }
 
-        if (createSupplementDto.getPrice() == null || createSupplementDto.getPrice() <= 0) {
+        if (createSupplementDto.getPrice() == null || createSupplementDto.getPrice().compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Price must greater than 0");
         }
     }

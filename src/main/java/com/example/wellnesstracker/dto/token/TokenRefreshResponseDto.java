@@ -1,4 +1,5 @@
-package com.example.wellnesstracker.dto.auth;
+package com.example.wellnesstracker.dto.token;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +8,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-public class LoginResponseDto {
+public class TokenRefreshResponseDto {
     private String token;
     private String refreshToken;
-    private long expiresIn;
+    private Long expiresIn; // Token expiration time in milliseconds
 }

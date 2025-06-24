@@ -19,27 +19,44 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private long tokenLifetime = 1000 * 60 * 24;
-
     @Value("${token.signing.key}")
     private String jwtSigningKey;
+
+    @Value("${security.jwt.expiration-time}")
+    private long jwtExpiration;
+
+    public String extractUsername(String token){
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
 
     public String generateToken(Auth userDetail) {
         return generateToken(new HashMap<>(),userDetail);
     }
 
-    public String generateToken(Map<String,Object> extraClaims, Auth userDetails){
+    public String generateToken(Map<String, Object> extraClaims, Auth userDetails) {
+        return buildToken(extraClaims, userDetails, jwtExpiration);
+    }
+
+    public String buildToken(Map<String,Object> extraClaims, Auth userDetails, long expiration) {
         extraClaims.put("role", userDetails.getRole());
 
         return Jwts.builder()
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + tokenLifetime))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey())
                 .compact();
     }
 
+    public long getExpirationTime() {
+        return jwtExpiration;
+    }
 
     public UserRole extractRole(String token){
         String roleString = extractClaim(token, (claims) -> claims.get("role", String.class));
@@ -54,21 +71,12 @@ public class JwtService {
         }
     }
 
-    public String extractUsername(String token){
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    private boolean isTokenExpired(String token){
+    private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
-    }
-
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token){
@@ -79,4 +87,6 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
 }

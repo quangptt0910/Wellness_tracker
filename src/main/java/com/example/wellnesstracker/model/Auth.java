@@ -24,5 +24,4 @@ public class Auth{
     private boolean enabled = true;
 
     private String userId;
-
 }

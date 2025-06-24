@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -21,7 +22,7 @@ public class CreateSupplementDto {
     private String name;
 
     @NotNull(message = "Category is required")
-    private String category;
+    private Category category;
 
     private String manufacturer;
 
@@ -31,5 +32,5 @@ public class CreateSupplementDto {
 
     private DosageUnit dosageUnit;
 
-    private Double price;
+    private BigDecimal price;
 }

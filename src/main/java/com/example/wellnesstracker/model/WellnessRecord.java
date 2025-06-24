@@ -27,8 +27,6 @@ public class WellnessRecord {
     private int sleepHours;
 
     private int stressLevel; // 1-10 scale
-
-
     private int energyLevel; // 1-10 scale
 
 

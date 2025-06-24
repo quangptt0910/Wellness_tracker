@@ -1,6 +1,7 @@
 package com.example.wellnesstracker.model;
 
 
+import com.example.wellnesstracker.common.Gender;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -15,9 +16,10 @@ public class User {
     private String id;
 
     private String name;
-
+    private String surname;
     private String email;
 
-//    private String authId;
-
+    private Gender gender;
+    private Double height;
+    private Double weight;
 }

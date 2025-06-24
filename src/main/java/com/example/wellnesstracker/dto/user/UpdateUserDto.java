@@ -1,5 +1,6 @@
 package com.example.wellnesstracker.dto.user;
 
+import com.example.wellnesstracker.common.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -11,9 +12,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateUserDto {
 
-    @Size(min = 1, message = "Name must not be empty")
     private String name;
+    private String surname;
 
     @Email(message = "Email should be valid")
     private String email;
+
+    private Gender gender;
+    private Double height;
+    private Double weight;
 }

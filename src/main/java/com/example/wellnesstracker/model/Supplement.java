@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class Supplement {
 
     private String name;
 
-    private String category;
+    private Category category;
 
     private String manufacturer;
 
@@ -35,7 +36,7 @@ public class Supplement {
 
     private DosageUnit dosageUnit;
 
-    private Double price;
+    private BigDecimal price;
 
 
     // Methods to add benefits

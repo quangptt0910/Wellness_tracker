@@ -5,6 +5,7 @@ import com.example.wellnesstracker.common.DosageUnit;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -18,11 +19,11 @@ public class SupplementDto {
 
     @NotNull(message = "Name cannot be null")
     private String name;
-    private String category;
+    private Category category;
     private String manufacturer;
     private List<String> benefits;
     private Integer dosageAmount;
-    private DosageUnit dosageUnit;         // Represented as String
-    private Double price;
+    private DosageUnit dosageUnit;
+    private BigDecimal price;
 
 }
