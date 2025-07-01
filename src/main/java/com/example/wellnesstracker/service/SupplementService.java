@@ -3,6 +3,7 @@ package com.example.wellnesstracker.service;
 import com.example.wellnesstracker.common.Category;
 import com.example.wellnesstracker.dto.supplement.CreateSupplementDto;
 import com.example.wellnesstracker.dto.supplement.SupplementDto;
+import com.example.wellnesstracker.dto.supplement.UpdateSupplementDto;
 import com.example.wellnesstracker.model.Supplement;
 import com.example.wellnesstracker.repository.SupplementRepository;
 import jakarta.validation.Valid;
@@ -10,7 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,11 +26,13 @@ public class SupplementService {
 
     private final SupplementRepository supplementRepository;
 
+    private static final String IMAGE_DIR = "src/main/resources/static/images/supplements/";
     @Autowired
     public SupplementService(SupplementRepository supplementRepository) {
         this.supplementRepository = supplementRepository;
     }
 
+    @Transactional
     public SupplementDto createSupplement(@Valid CreateSupplementDto supplementDto) {
        validateCreateSupplementDto(supplementDto);
 
@@ -58,7 +67,7 @@ public class SupplementService {
 
     // Update - take DTO, return DTO
     @Transactional
-    public SupplementDto updateSupplement(String id, SupplementDto supplementDto) {
+    public SupplementDto updateSupplement(String id, UpdateSupplementDto supplementDto) {
         Supplement existingSupplement = supplementRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Supplement not found with id: " + id));
 
@@ -78,6 +87,36 @@ public class SupplementService {
         return convertToDto(updatedSupplement);
     }
 
+    @Transactional
+    public SupplementDto updateSupplementImage(String id, String imageName) {
+        Supplement supplement = supplementRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Supplement not found with id: " + id));
+
+        supplement.setImageName(imageName);
+        Supplement updatedSupplement = supplementRepository.save(supplement);
+
+        return convertToDto(updatedSupplement);
+    }
+
+    @Transactional
+    public SupplementDto removeSupplementImage(String id) {
+        Supplement supplement = supplementRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Supplement not found with id: " + id));
+
+        supplement.setImageName(null);
+        Supplement updatedSupplement = supplementRepository.save(supplement);
+
+        return convertToDto(updatedSupplement);
+    }
+
+
+    public void deleteSupplement(String id) {
+        if (!supplementRepository.existsById(id)) {
+            throw new IllegalArgumentException("Supplement not found with id: " + id);
+        }
+        supplementRepository.deleteById(id);
+    }
+
     public List<SupplementDto> searchSupplementsByName(String name) {
         return supplementRepository.findByNameContainingIgnoreCase(name).stream()
                 .map(this::convertToDto)
@@ -94,7 +133,31 @@ public class SupplementService {
         dto.setDosageAmount(supplement.getDosageAmount());
         dto.setDosageUnit(supplement.getDosageUnit());
         dto.setPrice(supplement.getPrice());
+
+        String detectedImageName = detectImageForSupplement(supplement.getId());
+        if (detectedImageName != null) {
+            dto.setImageName(detectedImageName);
+        } else {
+            dto.setImageName(supplement.getImageName());
+        }
+
         return dto;
+    }
+
+    private String detectImageForSupplement(String supplementId) {
+        Path imageDir = Paths.get(IMAGE_DIR);
+        if (!Files.exists(imageDir)) return null;
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(imageDir, "supplement-" + supplementId + ".*")) {
+            Iterator<Path> iterator = stream.iterator();
+            if (iterator.hasNext()) {
+                return iterator.next().getFileName().toString();
+            }
+        } catch (IOException e) {
+            // Log error but continue
+            System.err.println("Error scanning image directory: " + e.getMessage());
+        }
+        return null;
     }
 
     public Supplement convertToEntity(SupplementDto dto) {
@@ -110,6 +173,7 @@ public class SupplementService {
         supplement.setDosageAmount(dto.getDosageAmount());
         supplement.setDosageUnit(dto.getDosageUnit());
         supplement.setPrice(dto.getPrice());
+        supplement.setImageName(dto.getImageName());
         return supplement;
     }
 
@@ -133,5 +197,18 @@ public class SupplementService {
         if (createSupplementDto.getPrice() == null || createSupplementDto.getPrice().compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Price must greater than 0");
         }
+    }
+
+    public String generateImageName(String supplementId, String originalFileName) {
+        String extension = getFileExtension(originalFileName);
+        return "supplement-" + supplementId + "." + extension;
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return "jpg";
+        }
+        int lastIndex = fileName.lastIndexOf('.');
+        return lastIndex > 0 ? fileName.substring(lastIndex + 1).toLowerCase() : "jpg";
     }
 }

@@ -3,12 +3,15 @@ package com.example.wellnesstracker.controller;
 import com.example.wellnesstracker.common.Category;
 import com.example.wellnesstracker.dto.supplement.CreateSupplementDto;
 import com.example.wellnesstracker.dto.supplement.SupplementDto;
+import com.example.wellnesstracker.dto.supplement.UpdateSupplementDto;
+import com.example.wellnesstracker.service.ImageService;
 import com.example.wellnesstracker.service.SupplementService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -17,9 +20,12 @@ public class SupplementController {
 
     private final SupplementService supplementService;
 
+    private final ImageService imageService;
+
     @Autowired
-    public SupplementController(SupplementService supplementService) {
+    public SupplementController(SupplementService supplementService, ImageService imageService) {
         this.supplementService = supplementService;
+        this.imageService = imageService;
     }
 
     @PostMapping
@@ -47,7 +53,7 @@ public class SupplementController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SupplementDto> updateSupplement(@PathVariable String id, @Valid @RequestBody SupplementDto supplementDto) {
+    public ResponseEntity<SupplementDto> updateSupplement(@PathVariable String id, @Valid @RequestBody UpdateSupplementDto supplementDto) {
         SupplementDto updatedSupplement = supplementService.updateSupplement(id, supplementDto);
         return ResponseEntity.ok(updatedSupplement);
     }
@@ -58,6 +64,25 @@ public class SupplementController {
         return ResponseEntity.ok(supplements);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSupplement(@PathVariable String id) {
+        try {
+            // Get supplement to check if it has an image
+            SupplementDto supplement = supplementService.getSupplementById(id);
+
+            // Delete associated image if exists
+            if (supplement.hasImage()) {
+                imageService.deleteSupplementImage(id);
+            }
+
+            // Delete supplement
+            supplementService.deleteSupplement(id);
+
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
     //Exception handler for validation errors
 //    @ExceptionHandler(ValidationException.class)
 //    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex) {

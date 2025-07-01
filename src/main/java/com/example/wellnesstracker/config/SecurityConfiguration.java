@@ -33,7 +33,8 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/register", "/api/login").permitAll()  // Explicit register/login
+                        .requestMatchers("/api/register", "/api/login").permitAll()
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers("api/supplement/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated()

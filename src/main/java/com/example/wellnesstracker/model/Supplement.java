@@ -38,6 +38,8 @@ public class Supplement {
 
     private BigDecimal price;
 
+    private String imageName; // only filename not full path
+
 
     // Methods to add benefits
     public void addBenefit(String benefit) {
@@ -45,5 +47,6 @@ public class Supplement {
             benefits.add(benefit);
         }
     }
-    
+
+
 }

@@ -2,6 +2,7 @@ package com.example.wellnesstracker.dto.supplement;
 
 import com.example.wellnesstracker.common.Category;
 import com.example.wellnesstracker.common.DosageUnit;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -26,4 +27,16 @@ public class SupplementDto {
     private DosageUnit dosageUnit;
     private BigDecimal price;
 
+    private String imageName;      // Raw filename stored in DB
+
+    // Image utility methods in DTO
+    @JsonProperty("imageUrl")
+    public String getImageUrl() {
+        return imageName != null ? "/api/images/supplements/" + imageName : null;
+    }
+
+    @JsonProperty("hasImage")
+    public boolean hasImage() {
+        return imageName != null && !imageName.isEmpty();
+    }
 }
