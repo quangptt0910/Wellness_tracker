@@ -29,7 +29,7 @@ public class CartService implements ICartService{
     @Override
     public Cart getCartByUserId(String userId) {
         return cartRepository.findByUserId(userId)
-                .orElseGet(() -> createNewCart(userId));
+                .orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
     }
 
 
