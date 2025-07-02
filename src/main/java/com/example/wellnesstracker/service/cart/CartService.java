@@ -9,9 +9,11 @@ import com.example.wellnesstracker.model.CartItem;
 import com.example.wellnesstracker.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +24,46 @@ public class CartService implements ICartService{
     @Autowired
     public CartService(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
+    }
+
+    @Override
+    public Cart getCartByUserId(String userId) {
+        return cartRepository.findByUserId(userId)
+                .orElseGet(() -> createNewCart(userId));
+    }
+
+
+    @Transactional
+    public CartItem addItemToCart(String userId, String supplementId, int quantity, BigDecimal unitPrice) {
+        Cart cart = getCartByUserId(userId);
+
+        // Check if item already exists in cart
+        Optional<CartItem> existingItem = cart.getItems().stream()
+                .filter(item -> item.getSupplementId().equals(supplementId))
+                .findFirst();
+
+        if (existingItem.isPresent()) {
+            // Update existing item
+            CartItem item = existingItem.get();
+            item.setQuantity(item.getQuantity() + quantity);
+            item.setTotalPrice(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+            updateCartTotal(cart);
+            cartRepository.save(cart);
+            return item;
+        } else {
+            // Add new item
+            CartItem newItem = new CartItem();
+            newItem.setSupplementId(supplementId);
+            newItem.setQuantity(quantity);
+            newItem.setUnitPrice(unitPrice);
+            newItem.setTotalPrice(unitPrice.multiply(BigDecimal.valueOf(quantity)));
+            newItem.setCart(cart);
+
+            cart.getItems().add(newItem);
+            updateCartTotal(cart);
+            cartRepository.save(cart);
+            return newItem;
+        }
     }
 
     @Override
@@ -48,7 +90,15 @@ public class CartService implements ICartService{
         return toDto(savedCart);
     }
 
+    private Cart createNewCart(String userId) {
+        Cart cart = new Cart();
+        cart.setUserId(userId);
+        cart.setTotalAmount(BigDecimal.ZERO);
+        return cartRepository.save(cart);
+    }
+
     @Override
+    @Transactional
     public CartDto updateCart(UpdateCartDto cartDto) {
         return null;
     }
@@ -59,6 +109,7 @@ public class CartService implements ICartService{
     }
 
     @Override
+    @Transactional
     public void clearCart(String id) {
 
     }
@@ -100,5 +151,12 @@ public class CartService implements ICartService{
                         : item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
         );
         return dto;
+    }
+
+    private void updateCartTotal(Cart cart) {
+        BigDecimal total = cart.getItems().stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        cart.setTotalAmount(total);
     }
 }
