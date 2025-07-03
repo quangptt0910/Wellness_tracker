@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/supplement")
+@RequestMapping("/api/supplements")
 public class SupplementController {
 
     private final SupplementService supplementService;
